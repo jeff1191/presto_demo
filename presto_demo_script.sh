@@ -2,7 +2,6 @@
 PRESTO_VERSION=0.186
 KAFKA_VERSION=0.10.2.1
 CASSANDRA_VERSION=3.11.1
-mkdir presto_demo; cd presto_demo;
 wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/$PRESTO_VERSION/presto-server-$PRESTO_VERSION.tar.gz
 wget http://apache.rediris.es/cassandra/$CASSANDRA_VERSION/apache-cassandra-$CASSANDRA_VERSION-bin.tar.gz 
 wget http://apache.rediris.es/kafka/$KAFKA_VERSION/kafka_2.11-$KAFKA_VERSION.tgz
@@ -12,5 +11,6 @@ tar -xvf apache-cassandra-$CASSANDRA_VERSION-bin.tar.gz; mv apache-cassandra-$CA
 tar -xvf kafka_2.11-$KAFKA_VERSION.tgz; mv kafka_2.11-$KAFKA_VERSION kafka
 mv presto-cli-0.186-executable.jar presto-cli; chmod +x presto-cli
 git clone https://github.com/big-data-europe/docker-hive.git
+git clone git@github.com:acesinc/json-data-generator.git
 rm -rf *.tar.gz
 rm -rf *.tgz
