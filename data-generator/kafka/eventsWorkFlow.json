@@ -1,0 +1,32 @@
+{
+    "eventFrequency": 50,
+    "varyEventFrequency": true,
+    "repeatWorkflow": true,
+    "timeBetweenRepeat": 2000,
+    "varyRepeatFrequency": false,
+    "steps": [{
+            "config": [{
+		"dealtable": "random('MUREX EUROPA_FILTRAR', 'MUREX EUROPA_MAD')",
+		"dealstamp": "integer(5500107, 11000787)",
+		"iddeal": "random('MUREX EUROPA_FILTRAR5500107', 'MUREX EUROPA_MAD11000787'))",
+		"assetclass": "random('IR')",
+		"timebucket": "random('F-[5Y-999Y]', 'F-[1Y-5Y]')",
+		"hedgingset": "random('F-', 'F-EUR', 'F-MXN')",
+		"hedgingsetinternal": "random('F-', 'F-EUR', 'F-MXN')",
+		"typedeal": "random('NO_BASIS')",
+		"adjustednominal": "double(10000.0000000001, 9999999.999999999)",
+		"maturityfactor": "double(-1.0, 1.0)",
+		"supervisorydelta": "double(-1.0, 1.0)",
+		"supervisoryduration": "double(1.000000000000001, 15.999999999999999)",		
+		"subclass": "random('F-SC-IR')",
+		"maturitydate": "date('2020/01/01T00:00:00', '2030/01/01T00:00:00')",
+		"startdate": "date('2015/01/01T00:00:00', '2017/01/01T00:00:00')",
+		"enddate": "date('2016/01/01T00:00:00', '2018/01/01T00:00:00')",
+		"lastoptiondate": "date('2020/01/01T00:00:00', '2025/01/01T00:00:00')",
+		"idposition": "integer(5500107, 11000787)",
+		"timestamp": "now()"				
+	    }
+            ],
+            "duration": 0
+        }]
+}

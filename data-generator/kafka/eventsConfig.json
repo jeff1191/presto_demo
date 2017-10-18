@@ -1,0 +1,14 @@
+{
+    "workflows": [{
+            "workflowName": "demo_events",
+            "workflowFilename": "eventsWorkFlow.json"
+        }],
+    "producers": [{
+        "type": "kafka",
+        "broker.server": "127.0.0.1",
+        "broker.port": 9092,
+        "topic": "demo.events",
+        "flatten": false,
+        "sync": false
+    }]
+}
