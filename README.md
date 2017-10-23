@@ -49,8 +49,8 @@ Introducimos información a hive
 `/opt/hive/bin/beeline -u jdbc:hive2://localhost:10000`
 
 ```
-CREATE EXTERNAL TABLE hivetest
-(id INT,first STRING,last STRING,age STRING,street STRING,city STRING)
+CREATE EXTERNAL TABLE users
+(id INT,first_name STRING,email STRING,gender STRING,MAC,address STRING,phone STRING)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE
@@ -65,13 +65,13 @@ LOCATION '/tmp/data';
  `SELECT * FROM system_schema.keyspaces;`
  
  ```
- CREATE KEYSPACE testeo WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
+ CREATE KEYSPACE apps WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
 ``` 
   ```
- CREATE TABLE testeo.ciudades( seq text PRIMARY KEY, first text, last text, age text, street text, city text, state text, zip text, dollar text, pick text, date text);
+CREATE TABLE apps.conn( id int, appName text,phone text,timestmp timestamp);  
    ```
   ```
- COPY testeo.ciudades [seq,first,last,age,street,city,state,zip,dollar,pick,date] FROM '../../data-generator/cassandra/cassandra-data.csv'
+ COPY apps.conn [id,appName,phone,timestmp] FROM '../../data-generator/cassandra/cassandra-data.csv'
  ```
 7. Iniciamos zookeeper/kafka y creamos topic
 
@@ -104,7 +104,7 @@ Para simular los eventos en tiempo real:
 
 #### Ejecución y configuración de Presto
 
-**FIXME:** Cambiar el /etc/hosts para que se pueda comunicar presto con el composedocker, comprobar que las direcciones corresponden 
+**FIX:** Cambiar el /etc/hosts para que se pueda comunicar presto con el composedocker, comprobar que las direcciones corresponden 
 ```
 172.18.0.2	namenode
 172.18.0.4	hive-metastore
@@ -123,4 +123,5 @@ Para simular los eventos en tiempo real:
 
 `./presto --server localhost:8080 --catalog hive --schema default --debug`
 
-`./presto --server localhost:8080 --catalog cassandra --schema testeo --debug`
+`./presto --server localhost:8080 --catalog cassandra --schema apps --debug`
+
