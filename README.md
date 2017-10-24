@@ -21,7 +21,7 @@
 |presto | cluster-presto |  
 |docker-hive | docker que nos levanta hive además del namenode, datanode, hdfs, hive |
 |etc | configuración del clúster de presto sobre cada uno de los sources | 
-|json-data-generator | herramienta para generar eventos a kafka |
+|data-generator/kafka/json-data-generator | herramienta para generar eventos a kafka |
 |data-generator | información que vamos a introducir en cassandra, hive y kafka | 
 
 5. Descargar/iniciar el docker-hive, esto incluye el (namenode, datanode, hdfs)( Más información -> https://github.com/big-data-europe/docker-hive)
@@ -42,7 +42,7 @@ Introducimos información a hive
 
 `docker exec -it hive-server bash`
 
-`hadoop fs -mkdir /tmp/data`
+`hadoop fs -mkdir -p /tmp/data`
 
 `hadoop fs -put hive-data.csv /tmp/data`
 
@@ -50,13 +50,15 @@ Introducimos información a hive
 
 ```
 CREATE EXTERNAL TABLE users
-(id INT,first_name STRING,email STRING,gender STRING,MAC,address STRING,phone STRING)
+(id INT,first_name STRING,email STRING,gender STRING,MAC STRING,address STRING,phone STRING)
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE
-LOCATION '/tmp/data';
+LOCATION '/tmp/data';;
 ```
-6. Creamos keyspace/table en Cassandra e importamos información. Desde la carpeta presto_demo, nos metemos en el directorio de cassandra/bin
+6. Creamos keyspace/table en Cassandra e importamos información
+ 
+ `cd cassandra/bin`
  
  `./cassandra -f -R`
  
@@ -68,10 +70,10 @@ LOCATION '/tmp/data';
  CREATE KEYSPACE apps WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'}  AND durable_writes = true;
 ``` 
   ```
-CREATE TABLE apps.conn( id int, appName text,phone text,timestmp timestamp);  
+CREATE TABLE apps.conn( id int, appName text,phone text,timestmp timestamp, PRIMARY KEY(id));  
    ```
   ```
- COPY apps.conn [id,appName,phone,timestmp] FROM '../../data-generator/cassandra/cassandra-data.csv'
+COPY apps.conn (id,appName,phone,timestmp) FROM '../../data-generator/cassandra/cassandra-data.csv'
  ```
 7. Iniciamos zookeeper/kafka y creamos topic
 
@@ -83,17 +85,17 @@ CREATE TABLE apps.conn( id int, appName text,phone text,timestmp timestamp);
 
 8. Configuración para simular eventos en tiempo real a kafka( Más información -> https://github.com/acesinc/json-data-generator)
 
-`cd json-data-generator`
+`cd data-generator/kafka/json-data-generator`
 
 `mvn clean package`
 
-`cp target/json-data-generator-1.0.0-bin.tar ../data-generator/kafka`
+`cp target/json-data-generator-1.0.0-bin.tar ../generatorToKafka`
 
-`cd ../data-generator/kafka`
+`cd ../generatorToKafka`
 
 `tar xvf json-data-generator-1.0.0-bin.tar`
 
-`mv *.json json-data-generator`
+`mv ../*.json json-data-generator`
 
 `cd json-data-generator`
 
@@ -119,9 +121,9 @@ Para simular los eventos en tiempo real:
 
 2. Ejecutamos el cliente presto (presto-cli) usando la source y el esquema que queremos
  
-`./presto --server localhost:8080 --catalog kafka --schema demo --debug`
+`./presto-cli --server localhost:8080 --catalog kafka --schema demo --debug`
 
-`./presto --server localhost:8080 --catalog hive --schema default --debug`
+`./presto-cli --server localhost:8080 --catalog hive --schema default --debug`
 
-`./presto --server localhost:8080 --catalog cassandra --schema apps --debug`
+`./presto-cli --server localhost:8080 --catalog cassandra --schema apps --debug`
 
