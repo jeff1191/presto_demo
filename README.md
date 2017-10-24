@@ -108,9 +108,9 @@ Para simular los eventos en tiempo real:
 
 **FIX:** Cambiar el /etc/hosts para que se pueda comunicar presto con el composedocker, comprobar que las direcciones corresponden 
 ```
-172.18.0.2	namenode
-172.18.0.4	hive-metastore
-172.18.0.5	datanode
+172.18.0.3	namenode
+172.18.0.4	datanode
+172.18.0.5	hive-metastore
 172.18.0.6	hive-server
 ```
 1. Copiamos el directorio etc en presto y ejecutamos presto
