@@ -11,7 +11,6 @@ tar -xvf apache-cassandra-$CASSANDRA_VERSION-bin.tar.gz; mv apache-cassandra-$CA
 tar -xvf kafka_2.11-$KAFKA_VERSION.tgz; mv kafka_2.11-$KAFKA_VERSION kafka
 mv presto-cli-0.186-executable.jar presto-cli; chmod +x presto-cli
 git clone https://github.com/big-data-europe/docker-hive.git
-mkdir data-generator/kafka/generatorToKafka
-git clone git@github.com:acesinc/json-data-generator.git data-generator/kafka
+git clone https://github.com/acesinc/json-data-generator.git
 rm -rf *.tar.gz
 rm -rf *.tgz

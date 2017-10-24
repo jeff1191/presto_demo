@@ -85,17 +85,15 @@ COPY apps.conn (id,appName,phone,timestmp) FROM '../../data-generator/cassandra/
 
 8. Configuración para simular eventos en tiempo real a kafka( Más información -> https://github.com/acesinc/json-data-generator)
 
-`cd data-generator/kafka/json-data-generator`
+`cd json-data-generator`
 
 `mvn clean package`
 
-`cp target/json-data-generator-1.0.0-bin.tar ../generatorToKafka`
-
-`cd ../generatorToKafka`
+`cp target/json-data-generator-1.0.0-bin.tar ../data-generator/kafka`
 
 `tar xvf json-data-generator-1.0.0-bin.tar`
 
-`mv ../*.json json-data-generator`
+`mv *.json json-data-generator`
 
 `cd json-data-generator`
 
