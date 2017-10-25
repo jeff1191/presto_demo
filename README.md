@@ -4,6 +4,13 @@
 - Java 8
 - docker/docker compose
 - Maven
+
+### Versiones
+- Presto 0.186
+- Apache Kafka 0.10.2.1
+- Apache Cassandra 3.11.1
+- Apache Hive 2.1.1 
+
 #### Configuración
 
 1. `git clone https://github.com/jeff1191/presto_demo.git`
@@ -12,7 +19,7 @@
 
 3. `./presto_demo_script.sh`
 
-4. Ejecutando el script se crea la estructura con los siguientes directorios:
+4. Ejecutando el script se crea una nueva estructura, quedando los siguientes directorios:
 
 |Directorio | Descripción |  
 |------------- |------------- |
@@ -21,7 +28,7 @@
 |presto | cluster-presto |  
 |docker-hive | docker que nos levanta hive además del namenode, datanode, hdfs, hive |
 |etc | configuración del clúster de presto sobre cada uno de los sources | 
-|data-generator/kafka/json-data-generator | herramienta para generar eventos a kafka |
+|json-data-generator | herramienta para generar eventos a kafka |
 |data-generator | información que vamos a introducir en cassandra, hive y kafka | 
 
 5. Descargar/iniciar el docker-hive, esto incluye el (namenode, datanode, hdfs)( Más información -> https://github.com/big-data-europe/docker-hive)
@@ -38,7 +45,7 @@
 
 Introducimos información a hive
  
-`docker cp data-generator/hive/hive-data.csv  hive-server:/opt/hive-data.csv`
+`cd ..; docker cp data-generator/hive/hive-data.csv  hive-server:/opt/hive-data.csv`
 
 `docker exec -it hive-server bash`
 
@@ -54,7 +61,7 @@ CREATE EXTERNAL TABLE users
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE
-LOCATION '/tmp/data';;
+LOCATION '/tmp/data';
 ```
 6. Creamos keyspace/table en Cassandra e importamos información
  
@@ -73,7 +80,7 @@ LOCATION '/tmp/data';;
 CREATE TABLE apps.conn( id int, appName text,phone text,timestmp timestamp, PRIMARY KEY(id));  
    ```
   ```
-COPY apps.conn (id,appName,phone,timestmp) FROM '../../data-generator/cassandra/cassandra-data.csv'
+COPY apps.conn (id,appName,phone,timestmp) FROM '../../data-generator/cassandra/cassandra-data.csv';
  ```
 7. Iniciamos zookeeper/kafka y creamos topic
 
@@ -89,22 +96,22 @@ COPY apps.conn (id,appName,phone,timestmp) FROM '../../data-generator/cassandra/
 
 `mvn clean package`
 
-`cp target/json-data-generator-1.0.0-bin.tar ../data-generator/kafka`
+`cp target/json-data-generator-1.3.1-SNAPSHOT-bin.tar ../data-generator/kafka ; cd ../data-generator/kafka`
 
-`tar xvf json-data-generator-1.0.0-bin.tar`
+`tar xvf json-data-generator-1.3.1-SNAPSHOT-bin.tar`
 
-`mv *.json json-data-generator`
+`mv *.json json-data-generator-1.3.1-SNAPSHOT/conf`
 
-`cd json-data-generator`
+`cd json-data-generator-1.3.1-SNAPSHOT`
 
 Para simular los eventos en tiempo real: 
 
-`java -jar json-data-generator-1.0.0.jar eventsConfig.json`
+`java -jar json-data-generator-1.3.1-SNAPSHOT.jar eventsConfig.json`
 
 
 #### Ejecución y configuración de Presto
 
-**FIX:** Cambiar el /etc/hosts para que se pueda comunicar presto con el composedocker, comprobar que las direcciones corresponden 
+**FIX:** Cambiar el **/etc/hosts** para que se pueda comunicar presto con el composedocker, comprobar que las direcciones corresponden 
 ```
 172.18.0.3	namenode
 172.18.0.4	datanode
@@ -113,7 +120,7 @@ Para simular los eventos en tiempo real:
 ```
 1. Copiamos el directorio etc en presto y ejecutamos presto
  
-`cp -rf etc presto; cd presto/bin`
+`mv etc presto; cd presto/bin`
 
 `./launcher run`
 
@@ -124,4 +131,3 @@ Para simular los eventos en tiempo real:
 `./presto-cli --server localhost:8080 --catalog hive --schema default --debug`
 
 `./presto-cli --server localhost:8080 --catalog cassandra --schema apps --debug`
-
